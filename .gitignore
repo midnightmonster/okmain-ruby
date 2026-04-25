@@ -1,2 +1,4 @@
 *.gem
+/tmp/
+/.ruby-lsp/
 rust_compare/target/
