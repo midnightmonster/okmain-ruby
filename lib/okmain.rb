@@ -19,7 +19,7 @@ module Okmain
   # @return [Array<Array<Integer>>] up to 4 [r, g, b] arrays sorted by score
   def colors(input, config: Config.new)
     pixels, width, height = Sampler.sample(input)
-    mask = DistanceMask.compute(width, height)
+    mask = DistanceMask.compute(width, height, config.mask_saturated_threshold)
     centroids, assignments = KMeans.cluster(pixels)
     Scorer.score(centroids, assignments, mask, config)
   end

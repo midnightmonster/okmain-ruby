@@ -38,16 +38,6 @@ module Okmain
       [r, g, b_]
     end
 
-    # sRGB component (0..255) → linear (0..1)
-    def srgb_to_linear(c)
-      c = c / 255.0
-      if c <= 0.04045
-        c / 12.92
-      else
-        ((c + 0.055) / 1.055)**2.4
-      end
-    end
-
     # Linear (0..1) → sRGB component (0..255), clamped
     def linear_to_srgb(c)
       c = c.clamp(0.0, 1.0)

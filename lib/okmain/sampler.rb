@@ -26,27 +26,37 @@ module Okmain
       block_size = compute_block_size(total)
 
       if block_size > 1
+        # Claude wanted to do this in Ruby for a more-exact rust match, because apparently image.shrink
+        # uses a slightly different algorithm, but an occasional 1 or 2 RGB value difference is a small
+        # price for the huge speedup in letting VIPS do it for us.
         image = image.shrink(block_size, block_size)
       end
 
       width = image.width
       height = image.height
 
+      # Claude's approach: Doing the colourspace translation ourselves
+      # ==============================================================
       # Extract float pixel data [r, g, b] in linear space
-      floats = image.write_to_memory.unpack("f*")
-      bands = image.bands
-      pixel_count = width * height
+      # floats = image.write_to_memory.unpack("f*")
+      # bands = image.bands
+      # pixel_count = width * height
 
-      pixels = Array.new(pixel_count)
-      i = 0
-      while i < pixel_count
-        offset = i * bands
-        r = floats[offset]
-        g = floats[offset + 1]
-        b = floats[offset + 2]
-        pixels[i] = Oklab.linear_rgb_to_oklab(r, g, b)
-        i += 1
-      end
+      # pixels = Array.new(pixel_count)
+      # i = 0
+      # while i < pixel_count
+      #   offset = i * bands
+      #   r = floats[offset]
+      #   g = floats[offset + 1]
+      #   b = floats[offset + 2]
+      #   pixels[i] = Oklab.linear_rgb_to_oklab(r, g, b)
+      #   i += 1
+      # end
+
+      # My approach: more than twice as fast to let VIPS do it for us
+      # =============================================================
+      image = image.colourspace(:oklab)
+      pixels = image.write_to_memory.unpack("f*").each_slice(3).to_a
 
       [pixels, width, height]
     end

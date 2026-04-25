@@ -10,7 +10,8 @@ module Okmain
     def score(centroids, assignments, mask, config)
       k = centroids.size
       n = assignments.size
-      mask_w = config.mask_weighted_counts_weight
+      mask_w = config.mask_weight
+      counts_w = config.mask_weighted_counts_weight
       chroma_w = config.chroma_weight
 
       # Weighted counts per centroid
@@ -37,7 +38,7 @@ module Okmain
       # Score each centroid
       scored = centroids.each_with_index.map do |centroid, idx|
         chroma = Math.sqrt(centroid[1] * centroid[1] + centroid[2] * centroid[2]) / MAX_SRGB_OKLAB_CHROMA
-        score = (1.0 - chroma_w) * weighted_counts[idx] + chroma_w * chroma
+        score = counts_w * weighted_counts[idx] + chroma_w * chroma
         [score, centroid]
       end
 

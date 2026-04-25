@@ -29,7 +29,7 @@ puts "=== Phase timing (5 runs) ==="
   times[:sample] = Process.clock_gettime(Process::CLOCK_MONOTONIC) - t0
 
   t0 = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-  mask = Okmain::DistanceMask.compute(w, h)
+  mask = Okmain::DistanceMask.compute(w, h, config.mask_saturated_threshold)
   times[:mask] = Process.clock_gettime(Process::CLOCK_MONOTONIC) - t0
 
   t0 = Process.clock_gettime(Process::CLOCK_MONOTONIC)
@@ -57,7 +57,7 @@ before_objects = ObjectSpace.count_objects
 pixels, w, h = Okmain::Sampler.sample(IMAGE)
 after_sample_mem = `ps -o rss= -p #{$$}`.strip.to_i
 
-mask = Okmain::DistanceMask.compute(w, h)
+mask = Okmain::DistanceMask.compute(w, h, config.mask_saturated_threshold)
 after_mask_mem = `ps -o rss= -p #{$$}`.strip.to_i
 
 centroids, assignments = Okmain::KMeans.cluster(pixels)
