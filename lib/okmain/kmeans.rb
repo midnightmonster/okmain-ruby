@@ -7,13 +7,14 @@ module Okmain
     LLOYDS_CONVERGENCE_TOL = 1e-3
     SIMILAR_CLUSTER_DISTANCE_SQ = 0.005
     KMEANSPP_CANDIDATES = 3
+    RANDOM_SEED = 314159
 
     module_function
 
     # Returns [centroids, assignments] where centroids is Array of [L, a, b]
     # and assignments is Array of centroid indices per pixel.
     def cluster(pixels, k: MAX_CENTROIDS)
-      rng = Random.new(42)
+      rng = Xoshiro256PlusPlus.new(RANDOM_SEED)
       n = pixels.size
       return [pixels.dup, Array.new(n) { |i| i }] if n <= k
 
@@ -45,7 +46,7 @@ module Okmain
     # K-means++ initialization with 3 candidates per step
     def init_plusplus(pixels, k, rng)
       n = pixels.size
-      centroids = [pixels[rng.rand(n)].dup]
+      centroids = [pixels[rng.random_range(n)].dup]
 
       dist_sq = Array.new(n, Float::INFINITY)
 
@@ -64,13 +65,13 @@ module Okmain
         best_potential = Float::INFINITY
 
         KMEANSPP_CANDIDATES.times do
-          # Weighted random selection
-          r = rng.rand * total
+          # Weighted random selection (matching Rust's sample_by_distance)
+          r = rng.random_f32 * total
           cumulative = 0.0
           idx = 0
           while idx < n
             cumulative += dist_sq[idx]
-            if cumulative >= r
+            if cumulative > r
               break
             end
             idx += 1
@@ -143,7 +144,7 @@ module Okmain
         while c < k
           if counts[c] == 0
             # Reassign empty cluster to random data point
-            ri = rng.rand(n)
+            ri = rng.random_range(n)
             new_centroids[c] = pixels[ri].dup
           else
             inv = 1.0 / counts[c]

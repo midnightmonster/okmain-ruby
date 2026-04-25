@@ -5,6 +5,7 @@ require_relative "okmain/config"
 require_relative "okmain/oklab"
 require_relative "okmain/sampler"
 require_relative "okmain/distance_mask"
+require_relative "okmain/xoshiro"
 require_relative "okmain/kmeans"
 require_relative "okmain/scorer"
 
