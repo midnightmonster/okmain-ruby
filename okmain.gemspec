@@ -5,9 +5,9 @@ require_relative "lib/okmain/version"
 Gem::Specification.new do |spec|
   spec.name = "okmain"
   spec.version = Okmain::VERSION
-  spec.authors = ["Joshua"]
+  spec.authors = ["Joshua Paine"]
   spec.summary = "Extract dominant colors from images using adaptive K-means in Oklab space"
-  spec.homepage = "https://github.com/joshua/okmain-ruby"
+  spec.homepage = "https://github.com/midnightmonster/okmain-ruby"
   spec.licenses = ["MIT", "Apache-2.0"]
   spec.required_ruby_version = ">= 3.0"
 
@@ -18,4 +18,6 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "ruby-vips", "~> 2.1"
+
+  spec.add_development_dependency "benchmark", "~> 0.4"
 end

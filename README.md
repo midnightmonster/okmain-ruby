@@ -62,6 +62,35 @@ Colors are returned as `[r, g, b]` arrays (0-255), sorted by score descending. T
 3. **Score** — Centroids ranked by a weighted combination of pixel count (with center-priority mask) and chroma
 4. **Return** — Up to 4 `[r, g, b]` arrays sorted by score
 
+## Comparing with the Rust implementation
+
+A small Rust binary is included in `rust_compare/` for verifying results against the original [okmain](https://github.com/si14/okmain) crate. Requires [Rust](https://rustup.rs/) 1.93+.
+
+Build it once:
+
+```
+cd rust_compare
+cargo build --release
+```
+
+Then compare outputs on any image:
+
+```bash
+# Rust
+rust_compare/target/release/rust_compare path/to/photo.jpg
+
+# Ruby
+bundle exec ruby -e "require 'okmain'; pp Okmain.colors('path/to/photo.jpg')"
+```
+
+Both print `[r, g, b]` arrays in the same order, so results can be diffed directly.
+
+For benchmarking (against rust, but mostly to catch progress or regression in the gem), use:
+
+```bash
+bundle exec ruby bench.rb path/to/image.png
+```
+
 ## Credits
 
 Based on the Rust [okmain](https://github.com/si14/okmain) crate (v0.2.0) by Dan Groshev and okmain contributors.
