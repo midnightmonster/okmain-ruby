@@ -11,6 +11,13 @@ and this project might adhere to [Semantic Versioning](https://semver.org/spec/v
 - Adding a suite of test images and automating benchmarking new versions against old versions for speed and correctness would be cool.
 - Even starting this project was AI psychosis. Would have been smarter to see if I like the output of the algorithm for the one specific thing I need this for first, no?
 
+## [0.2.1] - 2026-04-25
+
+### Added
+- `Okmain::Oklab` conversion helpers needed by a downstream app:
+  `srgb_to_linear`, `srgb8_to_oklab`, `oklab_to_oklch`, `oklch_to_oklab`,
+  `srgb8_to_oklch`. Hue is in degrees, normalized to `[0, 360)`.
+
 ## [0.2.0] - 2026-04-25
 
 ### Changed
@@ -37,6 +44,7 @@ and this project might adhere to [Semantic Versioning](https://semver.org/spec/v
 - Dual MIT / Apache-2.0 licensing matching the upstream crate.
 - README with install and usage examples.
 
-[Unreleased]: https://github.com/midnightmonster/okmain-ruby/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/midnightmonster/okmain-ruby/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/midnightmonster/okmain-ruby/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/midnightmonster/okmain-ruby/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/midnightmonster/okmain-ruby/releases/tag/v0.1.0
