@@ -49,10 +49,45 @@ module Okmain
       (c * 255.0).round.clamp(0, 255)
     end
 
+    # sRGB component (0..255) → linear (0..1)
+    def srgb_to_linear(c)
+      c = c / 255.0
+      if c <= 0.04045
+        c / 12.92
+      else
+        ((c + 0.055) / 1.055)**2.4
+      end
+    end
+
     # Oklab → sRGB [r, g, b] (0..255)
     def oklab_to_srgb8(l, a, b)
       r, g, b_ = oklab_to_linear_rgb(l, a, b)
       [linear_to_srgb(r), linear_to_srgb(g), linear_to_srgb(b_)]
+    end
+
+    # sRGB [r, g, b] (0..255) → Oklab [L, a, b]
+    def srgb8_to_oklab(r, g, b)
+      linear_rgb_to_oklab(srgb_to_linear(r), srgb_to_linear(g), srgb_to_linear(b))
+    end
+
+    # Oklab [L, a, b] → OkLCh [L, C, h] with h in degrees [0, 360)
+    def oklab_to_oklch(l, a, b)
+      c = Math.sqrt(a * a + b * b)
+      h = Math.atan2(b, a) * 180.0 / Math::PI
+      h += 360.0 if h.negative?
+      [l, c, h]
+    end
+
+    # OkLCh [L, C, h] (h in degrees) → Oklab [L, a, b]
+    def oklch_to_oklab(l, c, h)
+      rad = h * Math::PI / 180.0
+      [l, c * Math.cos(rad), c * Math.sin(rad)]
+    end
+
+    # sRGB [r, g, b] (0..255) → OkLCh [L, C, h] with h in degrees [0, 360)
+    def srgb8_to_oklch(r, g, b)
+      l, a, b_ = srgb8_to_oklab(r, g, b)
+      oklab_to_oklch(l, a, b_)
     end
   end
 end
